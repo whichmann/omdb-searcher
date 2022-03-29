@@ -1,6 +1,4 @@
-const getMovies = (movieName: string) =>
-  fetch(`http://www.omdbapi.com/?s=${movieName}&apikey=88e4957a`)
-    .then((response) => response.json())
-    .then((data) => console.log(data));
+const getMovies = (movieTitle: string) =>
+  fetch(`http://www.omdbapi.com/?s=${movieTitle}&apikey=88e4957a`);
 
 export default getMovies;

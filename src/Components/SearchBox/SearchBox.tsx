@@ -3,16 +3,16 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
 
-import getMovies from "../../Api/OmdbAPI";
+type Props = {
+    handleSearchQuery: (movieName: string) => void;
+}
 
-const SearchBox = () => {
+const SearchBox = ({
+  handleSearchQuery,
+}: Props) => {
   const [searchQuery, setSearchQuery] = useState("");
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
-  };
-
-  const handleSearchClick = () => {
-    getMovies(searchQuery);
   };
 
   return (
@@ -27,7 +27,9 @@ const SearchBox = () => {
       <Button
         variant="contained"
         endIcon={<SendIcon />}
-        onClick={handleSearchClick}
+        onClick={() => {
+          handleSearchQuery(searchQuery);
+        }}
       >
         Send
       </Button>
