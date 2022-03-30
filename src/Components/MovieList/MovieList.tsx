@@ -1,21 +1,24 @@
 import React from "react";
-import { OmdbResponseModel } from "./../../App";
+import Grid from "@mui/material/Grid";
+
+import "./MovieList.css";
+import MovieItem from "./../MovieItem/MovieItem";
+import { MoviesData } from "./../../App";
 
 type Props = {
-  movieList: OmdbResponseModel;
+  movieList: MoviesData;
 };
 
 const MovieList = ({ movieList }: Props) => {
-  console.log(movieList.movies);
   if (movieList.isError) {
     return <p>{movieList.errorMessage}</p>;
   }
   return (
-    <ul>
+    <Grid container spacing={3} paddingTop={2}>
       {movieList.movies.map((movie) => (
-        <li key={movie.Title}>{movie.Title}</li>
+        <MovieItem {...movie}></MovieItem>
       ))}
-    </ul>
+    </Grid>
   );
 };
 

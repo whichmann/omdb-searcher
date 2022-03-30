@@ -1,42 +1,57 @@
+import "./App.css";
 import { SearchBox, MovieList } from "./Components";
 import { useEffect, useState } from "react";
 import getMovies from "./Api/OmdbAPI";
 
 type MovieItemModel = {
   Title: string;
+  Poster: string;
+  Year: string;
 };
 
-type OmdbResponseModel = {
+type MoviesData = {
   movies: MovieItemModel[];
   isError: boolean;
   errorMessage: string | null;
 };
 
+type OmdbResponseModel = {
+  Response: "True" | "False";
+  Search?: MovieItemModel[];
+  Error?: string;
+};
+
 function App() {
-  const [omdbResult, setOmdbResult] = useState<OmdbResponseModel | null>(null);
+  const [moviesData, setMoviesData] = useState<MoviesData | null>(null);
   const [searchedMovie, setSearchedMovie] = useState("");
   const fetchMovies = async (movieTitle: string) => {
-    const response = await getMovies(movieTitle)
-    const data = await response.json();
-    if (data.Response === "False") {
-      const newOmdbResult = {
+    const response = await getMovies(movieTitle);
+    const data: OmdbResponseModel = await response.json();
+    if (response.status !== 200) {
+      setMoviesData({
         movies: [],
         isError: true,
-        errorMessage: data.Error,
-      };
-      setOmdbResult(newOmdbResult);
+        errorMessage: data.Error ?? "Please try again",
+      });
     } else {
-      const newOmdbResult = {
-        movies: data.Search,
-        isError: false,
-        errorMessage: null,
-      };
-      setOmdbResult(newOmdbResult);
+      const newOmdbResult =
+        data.Response === "True"
+          ? {
+              movies: data?.Search ?? [],
+              isError: false,
+              errorMessage: null,
+            }
+          : {
+              movies: [],
+              isError: true,
+              errorMessage: data.Error ?? "Please try again",
+            };
+      setMoviesData(newOmdbResult);
     }
   };
 
   useEffect(() => {
-    setOmdbResult(null);
+    setMoviesData(null);
     if (searchedMovie) {
       fetchMovies(searchedMovie);
     }
@@ -44,11 +59,15 @@ function App() {
 
   return (
     <>
-      <SearchBox handleSearchQuery={setSearchedMovie} />
-      {omdbResult && <MovieList movieList={omdbResult} />}
+      <div className={"search-container"}>
+        <SearchBox handleSearchQuery={setSearchedMovie} />
+      </div>
+      <div className={"list-container"}>
+        {moviesData && <MovieList movieList={moviesData} />}
+      </div>
     </>
   );
 }
 
 export default App;
-export type { OmdbResponseModel, MovieItemModel };
+export type { MoviesData, MovieItemModel };
