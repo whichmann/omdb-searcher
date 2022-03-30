@@ -16,7 +16,7 @@ const MovieItem = ({ Title, Year, Poster }: MovieItemModel) => (
         </Typography>
         <Typography variant="body2">{Year}</Typography>
       </CardContent>
-      <img src={Poster} height={620}></img>
+      <img src={Poster} height={620} alt={`${Title} - movie released on ${Year}`}></img>
     </Card>
   </Grid>
 );

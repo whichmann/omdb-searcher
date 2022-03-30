@@ -15,8 +15,8 @@ const MovieList = ({ movieList }: Props) => {
   }
   return (
     <Grid container spacing={3} paddingTop={2}>
-      {movieList.movies.map((movie) => (
-        <MovieItem {...movie}></MovieItem>
+      {movieList.movies.map((movie, index) => (
+        <MovieItem key={index} {...movie}></MovieItem>
       ))}
     </Grid>
   );
